@@ -6,7 +6,8 @@ using namespace std;
 #define LIST_H
 
 
-template <typename T> class List {
+template <typename T> 
+class List {
     public:
         // ... aquí los métodos virtuales puros
 	virtual void insert(int pos, T e = 0);
@@ -18,6 +19,5 @@ template <typename T> class List {
 	virtual bool empty() = 0;
 	virtual int size() = 0;
 };
-
 #endif
 
