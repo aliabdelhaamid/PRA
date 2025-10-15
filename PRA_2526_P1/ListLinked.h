@@ -38,13 +38,13 @@ class ListLinked : public List<T> {
     out << "List => [";
     
     if (aux != nullptr) {
-        out << aux->data;
-        aux = aux->next;
+	out << endl << "    "<< aux->data << endl;
+	aux = aux->next;
     }
 
     while (aux != nullptr) {
-        out << ", " << aux->data;
-        aux = aux->next;
+        out << "   " << aux->data << endl;
+	aux = aux->next;
     }
     
     out << "]";
@@ -113,7 +113,7 @@ T get(int pos) override{
 		Node<T>* prev = nullptr;
     		Node<T>* aux = first;
 		int i = 0;
-    		while (aux != nullptr && aux->data != pos) {
+    		while (aux != nullptr && i < pos) {
         		prev = aux;
         		aux = aux->next;
 			i++;

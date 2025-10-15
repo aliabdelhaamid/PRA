@@ -85,6 +85,7 @@ class ListArray : public List<T> {
 		if(pos < 0 || pos >= n) throw std::out_of_range("Posición fuera del rango de la array");
 		T res = arr[pos];
 		for(int i = pos; i < n - 1; i++) arr[i] = arr[i + 1];
+		n--;
 		return res;
 	}
 };
