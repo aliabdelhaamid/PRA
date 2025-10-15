@@ -19,27 +19,44 @@ class ListLinked : public List<T> {
 		n = 0;
 	}
 	~ListLinked(){
-		Node<T>* aux;
-		for(int i = 0; i < n; i++){ 
-			aux = first->next;
-			delete first->data;
-			first->data = aux;
+		Node<T>* aux = first;
+		Node<T>* nextNode;
+		
+		while(aux != nullptr){ 
+			nextNode = aux->next;
+			delete aux;
+			aux = nextNode;
 		}
 	}
 
 	T operator[](int pos){
-		get(pos);
+		return get(pos);
 	}
 
 	friend ostream& operator<<(ostream &out, const ListLinked<T> &list){
-	out << list.first->data << endl;
-	return out;
+		Node<T>* aux = list.first;
+    out << "List => [";
+    
+    if (aux != nullptr) {
+        out << aux->data;
+        aux = aux->next;
+    }
+
+    while (aux != nullptr) {
+        out << ", " << aux->data;
+        aux = aux->next;
+    }
+    
+    out << "]";
+    return out;
+	
 }
 
 void insert(int pos, T e) override{
 	if(pos < 0 || pos > n) throw std::out_of_range("Posición fuera del rango de la array");
 	if(pos == 0){
 		Node<T>* aux = new Node<T>(e,first); 
+		first = aux;
 		n++;
 	}
 	else{
@@ -59,7 +76,7 @@ void insert(int pos, T e) override{
 }
 
 void append(T e) override{
-	insert(n + 1,e);
+	insert(n,e);
 }
 void prepend(T e) override {
 	insert(0,e);
@@ -67,11 +84,7 @@ void prepend(T e) override {
 T get(int pos) override{
 	if(pos < 0 || pos >= n) throw std::out_of_range("Posición fuera del rango de la array");
 	Node<T>* aux = first;
-	int i = 0;
-	while(i < pos){
-		i++;
-		aux = aux->next;
-	}
+	for(int i= 0; i < pos; i++) aux = aux->next;
 	return aux->data;
         }
         int search(T e) override {
@@ -93,6 +106,32 @@ T get(int pos) override{
                 return n;
         }
 
+	T remove(int pos) override
+	{
+		if(pos < 0 || pos > n) throw out_of_range("No esta en el array");
+
+		Node<T>* prev = nullptr;
+    		Node<T>* aux = first;
+		int i = 0;
+    		while (aux != nullptr && aux->data != pos) {
+        		prev = aux;
+        		aux = aux->next;
+			i++;
+   		}
+		T res = 0;
+    		if (aux != nullptr) {
+        		if (aux == first) {
+            			first = aux->next;
+        		}
+			else {
+            			prev->next = aux->next;
+        		}
+			res = aux->data;
+        		delete aux;
+        		n--;
+    		}
+		return res;
+	}   
 
 
 

@@ -10,7 +10,7 @@ template <typename T>
 class List {
     public:
         // ... aquí los métodos virtuales puros
-	virtual void insert(int pos, T e = 0);
+	virtual void insert(int pos, T e) = 0;
 	virtual void append(T e) = 0;
 	virtual void prepend(T e) = 0;
 	virtual T remove(int pos) = 0;
