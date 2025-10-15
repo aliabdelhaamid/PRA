@@ -1,4 +1,6 @@
-#include <iostream>
+#include <ostream>
+
+using namespace std;
 
 template <typename T> 
 class Node {
@@ -6,7 +8,14 @@ class Node {
         // miembros públicos
 	T data;
 	Node<T>* next;
- 	Node(T data, Node<T>* next=nullptr);
-	friend std::ostream& operator<<(std::ostream &out, const Node<T> &node);
-   
+ 	Node(T data, Node<T>* next=nullptr){
+		this->data = data;
+		this->next = next;
+	}
+
+	friend ostream& operator<<(ostream &out, const Node<T> &node)
+	{
+		out << node->data << endl;
+		return out;
+	}   
 };
