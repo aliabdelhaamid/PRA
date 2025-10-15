@@ -20,6 +20,7 @@ class ListArray : public List<T> {
 	int max;
 	int n;
 	static const int MINSIZE;
+	
     public:
         // miembros públicos, incluidos los heredados de List<T>
 	void insert(int pos, T e) override{
@@ -29,23 +30,28 @@ class ListArray : public List<T> {
 		n++;
 		resize(n);
 	}    	
-	void append(T e) override{
+	void append(T e) override
+	{
 		insert(n + 1,e);
 	}
-	void prepend(T e) override {
+	void prepend(T e) override 
+	{
 		insert(0,e);
 	}
-	T get(int pos) override{
+	T get(int pos) override
+	{
 		if(pos < 0 || pos > n) throw std::out_of_range("Posición fuera del rango de la array");
 		return arr[pos];
 	}
-	int search(T e){
+	int search(T e) override
+	{
 		for(int i = 0; i < n; i++) if(arr[i] == e) return i;
 		return -1;
 	}
 	
-	bool empty() override {
-		if (n = 0) return true;
+	bool empty() override 
+	{
+		if (n == 0) return true;
 		else return false;
 	}
 	int size() override{
@@ -62,7 +68,7 @@ class ListArray : public List<T> {
 	}
 	T operator[](int pos){
 		if(pos < 0 || pos > n) throw std::out_of_range("Posición fuera del rango de la array");
-                return arr[pos];
+            return arr[pos];
 	}
 	friend ostream& operator<<(ostream &out, const ListArray<T> &list){
 		out << "Números: ";
