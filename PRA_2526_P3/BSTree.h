@@ -14,8 +14,8 @@ class BSTree {
 	int nelem;
 	BSNode<T> *root;
 	
-	BSNode<T>* search(BSNode<T>* n, T e)const {
-		if(n == nullptr) {throw runtime_error("Elemento no encontrado"); }
+	BSNode<T>* search(BSNode<T>* n, T e) const{
+		if(n == nullptr) {throw runtime_error("Elemento no encontrado");}
 		else if(n->elem > e) { return search(n->left, e);}
 		else if(n->elem < e) { return search(n->right, e);}
 		else {return n;}
@@ -60,18 +60,13 @@ class BSTree {
 		return n;	
 	}
 
-	T max(BSNode<T>* n) const{
-		if(n == nullptr) {
+	T max(BSNode<T>* n) const {
+		if(n == nullptr){
 			throw runtime_error("Elemento no encontrado");
 		}
-		else if(n->right != nullptr){
-			return max(n->right);
-		}
-		else{
-			return n->elem;
-		}
+		else if(n->right != nullptr){return max(n->right);}
+		else{return n->elem;}
 	}
-	
 	
 	BSNode<T>* remove_max(BSNode<T>* n){
 		if (n->right == nullptr){
@@ -79,9 +74,9 @@ class BSTree {
         	delete n;
 			return aux;
 		}
-    		else{
-        		n->right = remove_max(n->right);
-       		 	return n;
+    	else{
+        	n->right = remove_max(n->right);
+       		return n;
 		}
 	}
 	
