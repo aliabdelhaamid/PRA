@@ -31,7 +31,7 @@ class BSTree {
 		return n;
 	}
 	
-	void print_inorder(std::ostream &out, BSNode<T>* n) const{
+	void print_inorder(ostream &out, BSNode<T>* n) const{
 		if(n == nullptr){
 			return;
 		}
@@ -107,7 +107,7 @@ class BSTree {
 		root = insert(root, e);
 		nelem++;
 	}
-	friend std::ostream& operator<<(std::ostream &out, const BSTree<T> &bst){
+	friend ostream& operator<<(ostream &out, const BSTree<T> &bst){
 		bst.print_inorder(out, bst.root);
 		return out;
 	}
