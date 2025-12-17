@@ -24,12 +24,6 @@ class HashTable: public Dict<V> {
 		}
 		return res % max;
 	}
-	int h2(int hash_val){
-		if(hash_val > max){
-			return 0;
-		}
-		return hash_val + 1;
-	}
 	// table[i] es la cubeta es on hi han nodos amb informacio de clave->valor
 
     public:
@@ -37,55 +31,33 @@ class HashTable: public Dict<V> {
 	void insert(string key, V value) override{
 		int i = h(key);
 		int pos = table[i].search(key);
-		TableEntry<V> aux = TableEntry<V>(key, value);
+		if(pos != -1){
+			throw runtime_error("Ya existe en el diccionario");
+		}
 
-		if(pos != -1){ // si la posicio ja esta ocupada
-			int j = h2(i);
-			int pos_nueva = table[j].search(key);
-			if(pos_nueva == -1){ // si no esta ocupada
-				table[j].append(aux);		
-			}
-			
-		}
-		else{
-			table[i].append(aux); // tinc que recorrer tots els nodos de la posició i despres afegir 
-		}
+		TableEntry<V> aux = TableEntry<V>(key, value);
+		table[i].append(aux); // tinc que recorrer tots els nodos de la posició i despres afegir 
 		n++;
 	}
 	V search(string key)override{
 		int i = h(key);      
 		int pos = table[i].search(key); // en la posicio i se suposa que esta key, si no esta fem un throw
-		TableEntry<V> aux;
-		if(pos == -1){ // si no sa trobat
-			int j = h2(i);
-			int pos_nueva = table[j].search(key);
-			if(pos_nueva != -1){
-				aux = table[j].get(pos_nueva);
-			}
+		if(pos == -1){
+			throw runtime_error("No se encuentra en el diccionario");
 		}
-		else{
-			aux = table[i].get(pos);
-		}
+		
+		TableEntry<V> aux = table[i].get(pos);
 		return aux.value;
 	}
     V remove(string key)override{
 		int i = h(key);
 		int pos = table[i].search(key);
-        	TableEntry<V> aux;
+        if(pos == -1){
+            throw runtime_error("No se encuentra en el diccionario");
+        }
 
-		if(pos == -1){ // si no sa trobat
-                        int j = h2(i);
-                        int pos_nueva = table[j].search(key);
-                	if(pos_nueva != -1){
-                        	aux = table[j].get(pos_nueva);
-                        	table[j].remove(pos_nueva);
-			}
-                 }
-                 else{
-                        aux = table[i].get(pos);
-			table[i].remove(pos);
-                 }
-            
+		TableEntry<V> aux = table[i].get(pos);
+		table[i].remove(pos);
 		n--;
 		return aux.value;
 		

@@ -10,9 +10,5 @@ bin/testBSTree: testBSTree.cpp BSTree.h
 bin/testBSTreeDict: testBSTreeDict.cpp BSTreeDict.h
 	mkdir -p bin
 	g++ -std=c++17 -o bin/testBSTreeDict testBSTreeDict.cpp
-bin/praA: praA.cpp HashTable.h
-	mkdir -p bin
-	g++ -std=c++17 -o bin/praA praA.cpp
-
 clean:
 	rm -rf *.o *.gch bin
