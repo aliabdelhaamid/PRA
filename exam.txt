@@ -1,0 +1,10 @@
+procedure insertarRH(tabla, item):
+
+    int i = hash(item.key)
+
+    mientras no esta vacia:
+        si saltos <= tabla[h].saltos:
+            item.saltos++
+        i++
+    
+    tabla[h] = item

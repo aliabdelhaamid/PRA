@@ -1,64 +1,169 @@
 #include <iostream>
-#include <set>
+#include <string>
+#include <vector>
 #include <fstream>
+#include <sstream>
+#include <map>
+#include <set>
 
 using namespace std;
 
-class Nodo{
-private:
-  int data;
-  Nodo* next;
-public:
-  Nodo(int data, Nodo* next = nullptr){
-  this->data = data;
-  this->next = next;
-  }
-};
-
 struct camelCards
 {
-   string cartas;
-   int bet;
-   Nodo* izquierdo;
-   Nodo* derecho;
+  string mano;
+  int bet;
+  string fuerza;
+  camelCards *izquierda;
+  camelCards *derecha;
 };
 
-vector<char> orden = {'A','K', 'Q', 'J', 'T', '9', '8', '7','6','5','4','3','2'};
-int calcular_rango(string c1, string c2, vector<char> orden){
-  set <char> t1; 
-  for (int i = 0; i < c1.size(); i++)
-  {
-    t1.insert(c1[i]);
-  }
-  set <char> t2; 
-  for (int i = 0; i < c1.size(); i++)
-  {
-    t2.insert(c1[i]);
-  }
-  if (t1.size() < t2.size())
-  {
-    /* code */
-  }
-      
-}7890'
-void Inorden(camelCards &x, vector<int>& resultado){
-  if (x.izquierdo != nullptr){
-      Inorden(x.izquierdo, resultado);   // 1. Recorre el subárbol izquierdo
-      resultado.push_back(x.bet);      // 2. Guarda el valor del nodo
-      Inorden(x.derecho, resultado);     // 3. Recorre el subárbol derecho
-  }
+map <char, int> orden = {
+  {'A', 14},
+  {'K', 13},
+  {'Q', 12},
+  {'J', 11},
+  {'T', 10},
+  {'9', 9},
+  {'8', 8},
+  {'7', 7},
+  {'6', 6},
+  {'5', 5},
+  {'4', 4},
+  {'3', 3},
+  {'2', 2}
 };
 
+map <string, int> rangoFuerza = {     
+  {"Cinco Iguales", 6}, 
+  {"Póquer", 5},
+  {"Full", 4},
+  {"Trio", 3},
+  {"Doble Pareja", 2},
+  {"Pareja", 1},
+  {"Carta Alta", 0}
+};
+
+bool isPoquer(string mano){
+  map<char, int> frecuencia;
+  for (size_t i = 0; i < mano.size(); i++)
+  {
+    frecuencia[mano[i]]++;
+  }
+  for (auto i = frecuencia.begin(); i != frecuencia.end(); ++i)
+  {
+    if (i->second == 4)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+string calcularFuerza(string mano){
+  set <char> cartasUnicas;
+  for (char c : mano) {
+    cartasUnicas.insert(c); 
+  }
+
+  if (cartasUnicas.size() == 1)
+  {
+    return "Cinco Iguales";
+  }
+  else if(cartasUnicas.size() == 2){
+    if(isPoquer(mano)){
+      return "Póquer";
+    }
+    else {
+      return "Full";
+    }
+  }
+  else if(cartasUnicas.size() == 3){
+    // Puede ser Trio (3 iguales) o Doble Pareja (2 iguales + 2 iguales)
+    map<char, int> f;
+    for(char c : mano) f[c]++;
+    
+    for(auto const& pair : f) {
+        if(pair.second == 3) return "Trio";
+    }
+    return "Doble Pareja";
+  }
+  else if(cartasUnicas.size() == 4){
+    return "Pareja";
+  }
+  else if(cartasUnicas.size() == 5){
+    return "Carta Alta";
+  }
+}
+
+void insertar(string mano, int bet, camelCards *&lista){
+  if (lista == nullptr){
+    lista = new camelCards();
+    lista->mano = mano;
+    lista->bet = bet;
+    lista->fuerza = calcularFuerza(mano);
+    lista->izquierda = nullptr;
+    lista->derecha = nullptr;
+    return;
+  }
+  else if(rangoFuerza[lista->fuerza] > rangoFuerza[calcularFuerza(mano)]){ // A la derecha
+    insertar(mano, bet, lista->derecha);
+  }
+  else if(rangoFuerza[lista->fuerza] < rangoFuerza[calcularFuerza(mano)]){ // A la izquierda
+    insertar(mano, bet, lista->izquierda);
+  }/* Si son del mismo rango de fuerza, hay que mirar caracter a caracter */
+  else{
+    for (size_t i = 0; i < mano.size(); i++)
+    {
+      if(orden[lista->mano[i]] > orden[mano[i]]){
+        insertar(mano, bet, lista->derecha);
+        return;
+      }
+      else if(orden[lista->mano[i]] < orden[mano[i]]){
+        insertar(mano, bet, lista->izquierda);
+        return;
+      }
+    }
+    
+  }
+}
+
+void calcularResultado(camelCards *lista, int &ranking, long &total) {
+  if (lista == nullptr) {
+    return;
+  }
+  calcularResultado(lista->derecha, ranking, total);
+  
+  ranking++;
+  total += lista->bet * ranking;;
+  calcularResultado(lista->izquierda, ranking, total);
+}
 
 int main(){
-    ifstream fichero("imput.txt");
-    if (!fichero.is_open()) throw runtime_error("No se encuentra");
-    camelCards x;
-    string c1,c2;
-    int res = calcular_rango(c1,c2,orden);
-    vector<int> resultado;
-    Inorden(x,resultado);
-    return 0;
+
+  ifstream fichero("input.txt");
+
+  if (!fichero.is_open()){ 
+    throw runtime_error("No se encuentra el fichero\n");
+  }
+
+  camelCards *raiz = nullptr;
+  string linea;
+  
+  while(getline(fichero, linea)){
+    string mano;
+    int bet;
+    stringstream ss(linea);
+    ss >> mano >> bet;
+
+    insertar(mano, bet, raiz);
+  }
+
+  long total = 0;
+  int ranking = 0;
+  calcularResultado(raiz, ranking, total);
+  cout << total << endl;
+  return 0;
     
 }
 
