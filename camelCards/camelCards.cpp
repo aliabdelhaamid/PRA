@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <map>
+#include <unordered_map>
 #include <set>
 
 using namespace std;
@@ -17,7 +17,7 @@ struct camelCards
   camelCards *derecha;
 };
 
-map <char, int> orden = {
+unordered_map <char, int> orden = {
   {'A', 14},
   {'K', 13},
   {'Q', 12},
@@ -33,7 +33,7 @@ map <char, int> orden = {
   {'2', 2}
 };
 
-map <string, int> rangoFuerza = {     
+unordered_map <string, int> rangoFuerza = {     
   {"Cinco Iguales", 6}, 
   {"Póquer", 5},
   {"Full", 4},
@@ -44,7 +44,7 @@ map <string, int> rangoFuerza = {
 };
 
 bool isPoquer(string mano){
-  map<char, int> frecuencia;
+  unordered_map<char, int> frecuencia;
   for (size_t i = 0; i < mano.size(); i++)
   {
     frecuencia[mano[i]]++;
@@ -80,7 +80,7 @@ string calcularFuerza(string mano){
   }
   else if(cartasUnicas.size() == 3){
     // Puede ser Trio (3 iguales) o Doble Pareja (2 iguales + 2 iguales)
-    map<char, int> f;
+    unordered_map<char, int> f;
     for(char c : mano) f[c]++;
     
     for(auto const& pair : f) {

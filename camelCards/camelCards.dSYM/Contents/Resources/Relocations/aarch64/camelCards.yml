@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     "/Users/aliabdelhamid/Programación/Code25-26/PRA/camelCards/camelCards"
+relocations:     []
+...
